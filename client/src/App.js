@@ -28,7 +28,7 @@ class App extends Component {
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = Election.networks[networkId];
       const instance = new web3.eth.Contract(Election.abi, deployedNetwork && deployedNetwork.address);
-      this.setState({ web3, accounts, ElectionInstance: instance });
+      this.setState({ web3: web3, account: accounts[0], ElectionInstance: instance });
 
       // check for election info
       const [owner, start, end] = await Promise.all([
@@ -37,7 +37,7 @@ class App extends Component {
         this.state.ElectionInstance.methods.getEnd().call()
       ]);
       this.setState({
-        isAdmin: this.state.account === owner,
+        isAdmin: this.state.account == owner,
         start: start,
         end: end
       });
@@ -55,7 +55,7 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <h1>You are {this.state.isAdmin ? '' : 'not '}an admin.</h1>
+        <h1>You are {this.state.isAdmin ? '' : 'not '}the admin.</h1>
         <h1>The election has {this.state.start ? '' : 'not '}started.</h1>
         <h1>The election has {this.state.end ? '' : 'not '}ended.</h1>
       </div>
