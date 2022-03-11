@@ -16,6 +16,7 @@ class AdminPage extends Component {
 			account: null,
 			web3: null,
 			isAdmin: false,
+			loading: true,
 			candidateName: ''
 		}
 	}
@@ -45,7 +46,8 @@ class AdminPage extends Component {
 			this.setState({
 				isAdmin: this.state.account === owner,
 				start: start,
-				end: end
+				end: end,
+				loading: false
 			});
 		} catch (error) {
 			// Catch any errors for any of the above operations.
@@ -62,7 +64,7 @@ class AdminPage extends Component {
 	}
 
 	render() {
-		if (!this.state.web3) return <Loading />
+		if (this.state.loading) return <Loading />
         if (!this.state.isAdmin) {
             return <h1 className="title pt-5 has-text-centered">Sorry, you do not have access to this page.</h1>
         }

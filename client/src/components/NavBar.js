@@ -16,6 +16,7 @@ class NavBar extends Component {
 			account: null,
 			web3: null,
 			isAdmin: false,
+            loading: true
 		}
 	}
 
@@ -44,7 +45,8 @@ class NavBar extends Component {
 			this.setState({
 				isAdmin: this.state.account === owner,
 				start: start,
-				end: end
+				end: end,
+                loading: false
 			});
 		} catch (error) {
 			// Catch any errors for any of the above operations.

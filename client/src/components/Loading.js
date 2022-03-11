@@ -9,7 +9,7 @@ class Loading extends Component {
             <div className="columns pt-5">
                 <div className="column is-3"></div>
                 <div className="column is-6">
-                    <progress class="progress is-large is-info pt-5" max="100">60%</progress>
+                    <progress className="progress is-large is-info pt-5" max="100">60%</progress>
                 </div>
                 <div className="column is-3"></div>
             </div>

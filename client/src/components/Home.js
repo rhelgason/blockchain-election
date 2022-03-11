@@ -14,6 +14,8 @@ class Home extends Component {
 			account: null,
 			web3: null,
 			isAdmin: false,
+            loading: true,
+            candidates: []
 		}
 	}
 
@@ -34,15 +36,26 @@ class Home extends Component {
 			this.setState({ web3: web3, account: accounts[0], ElectionInstance: instance });
 
 			// check for election info
-			const [owner, start, end] = await Promise.all([
+			const [owner, start, end, numCandidates] = await Promise.all([
 				this.state.ElectionInstance.methods.getOwner().call(),
 				this.state.ElectionInstance.methods.getStart().call(),
-				this.state.ElectionInstance.methods.getEnd().call()
+				this.state.ElectionInstance.methods.getEnd().call(),
+                this.state.ElectionInstance.methods.getNumCandidates().call()
 			]);
+            let candidates = []
+            for (var i = 1; i <= numCandidates; i++) {
+                const [name, votes] = await Promise.all([
+                    this.state.ElectionInstance.methods.getCandidateName(i).call(),
+                    this.state.ElectionInstance.methods.getCandidateVotes(i).call()
+                ]);
+                candidates.push({ id: i, name: name, votes: parseInt(votes) });
+            }
 			this.setState({
 				isAdmin: this.state.account === owner,
 				start: start,
-				end: end
+				end: end,
+                candidates: candidates,
+                loading: false
 			});
 		} catch (error) {
 			// Catch any errors for any of the above operations.
@@ -52,15 +65,35 @@ class Home extends Component {
 	};
 
 	render() {
-		if (!this.state.web3) return <Loading />
+		if (this.state.loading) return <Loading />
 
-		return (
-			<div className="App">
-				<h1>You are {this.state.isAdmin ? '' : 'not '}the admin.</h1>
-				<h1>The election has {this.state.start ? '' : 'not '}started.</h1>
-				<h1>The election has {this.state.end ? '' : 'not '}ended.</h1>
-			</div>
-		);
+		return (<>
+            <h1 className="title pt-5 has-text-centered">Election Results</h1>
+            <div className="is-divider" style={{ height: '1000%' }}></div>
+            <hr className="is-divider"></hr>
+            <div className="columns">
+                <div className="column is-3"></div>
+                <div className="column is-6">
+                    <table className="table is-fullwidth">
+                        <thead><tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Votes</th>
+                        </tr></thead>
+                        <tbody>
+                            {this.state.candidates.map(candidate => {
+                                return <tr>
+                                    <th>{candidate.id}</th>
+                                    <th>{candidate.name}</th>
+                                    <th>{candidate.votes}</th>
+                                </tr>
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="column is-3"></div>
+            </div>
+        </>);
 	}
 }
 
