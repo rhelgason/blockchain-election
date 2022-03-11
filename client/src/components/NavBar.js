@@ -64,8 +64,8 @@ class NavBar extends Component {
                 <div className="navbar-menu">
                     <div className="navbar-start is-bold">
                         <Link to='/' className="navbar-item">Home</Link>
-                        <Link to='/candidates' className="navbar-item">Candidates</Link>
-                        <Link to='/addvoter' className="navbar-item">Apply to Vote</Link>
+                        {/*<Link to='/candidates' className="navbar-item">Candidates</Link>
+                        <Link to='/addvoter' className="navbar-item">Apply to Vote</Link>*/}
                         <Link to='/vote' className="navbar-item">Vote</Link>
                     </div>
                     {!this.state.isAdmin ? <></> : <div className="navbar-end pr-3">
