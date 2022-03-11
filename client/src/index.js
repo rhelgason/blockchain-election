@@ -6,6 +6,7 @@ import { Router, Switch, Route } from 'react-router-dom';
 import history from './history';
 import NavBar from './components/NavBar';
 import Home from './components/Home';
+import Vote from './components/Vote';
 import AdminPage from './components/AdminPage';
 
 ReactDOM.render(
@@ -13,6 +14,7 @@ ReactDOM.render(
         <NavBar />
         <Switch>
             <Route exact path='/' component={Home} />
+            <Route exact path='/vote' component={Vote} />
             <Route exact path='/admin' component={AdminPage} />
         </Switch>
     </Router>,

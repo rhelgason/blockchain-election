@@ -13,21 +13,13 @@ contract Election {
         uint numVotes;
     }
     mapping(uint => Candidate) public candidates;
-    uint public numVoters;
-    struct Voter {
-        address voterAddress;
-        string name;
-        bool hasVoted;
-        bool isVerified;
-    }
-    mapping(address => Voter) public voters;
+    mapping(address => bool) public voters;
 
     function Election() public {
         owner = msg.sender;
         hasStarted = false;
         hasEnded = false;
         numCandidates = 0;
-        numVoters = 0;
     }
 
     function getOwner() public view returns (address) {
@@ -53,31 +45,30 @@ contract Election {
         return numCandidates;
     }
 
-    function requestVoter(string _name) public {
-        numVoters++;
-        voters[msg.sender] = Voter({
-            voterAddress: msg.sender,
-            name: _name,
-            hasVoted: false,
-            isVerified: false
-        });
+    function getCandidateName(uint _candidateId) public view returns (string) {
+        require(_candidateId > 0 && _candidateId <= numCandidates);
+        return candidates[_candidateId].name;
     }
 
-    function getNumVoters() public view returns (uint) {
-        return numVoters;
+    function getCandidateVotes(uint _candidateId) public view returns (uint) {
+        require(_candidateId > 0 && _candidateId <= numCandidates);
+        return candidates[_candidateId].numVotes;
     }
 
-    function verifyVoter(address _address) public adminOnly {
-        voters[_address].isVerified = true;
+    function hasVoted() public view returns (bool) {
+        if (voters[msg.sender]) {
+            return true;
+        }
+        return false;
     }
 
-    function vote(uint candidateId) public {
+    function vote(uint _candidateId) public {
         require(hasStarted == true);
         require(hasEnded == false);
-        require(voters[msg.sender].hasVoted == false);
-        require(voters[msg.sender].isVerified == true);
-        candidates[candidateId].numVotes++;
-        voters[msg.sender].hasVoted = true;
+        require(!voters[msg.sender]);
+        require(_candidateId > 0 && _candidateId <= numCandidates);
+        candidates[_candidateId].numVotes++;
+        voters[msg.sender] = true;
     }
 
     function start() public adminOnly {

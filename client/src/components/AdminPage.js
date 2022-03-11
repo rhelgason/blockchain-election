@@ -3,7 +3,7 @@ import Election from "../contracts/Election.json";
 import getWeb3 from "../getWeb3";
 import Loading from "./Loading";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserTie } from '@fortawesome/free-solid-svg-icons';
+import { faUserTie, faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
 
 import "../index.css";
 import "bulma/css/bulma.min.css";
@@ -17,7 +17,9 @@ class AdminPage extends Component {
 			web3: null,
 			isAdmin: false,
 			loading: true,
-			candidateName: ''
+			candidateName: '',
+			start: false,
+			end: false
 		}
 	}
 
@@ -56,10 +58,16 @@ class AdminPage extends Component {
 		}
 	};
 
+	operateElection = async () => {
+		if (!this.state.start) await this.state.ElectionInstance.methods.start().send({ from: this.state.account });
+        else await this.state.ElectionInstance.methods.end().send({ from: this.state.account });
+		window.location.reload(false);
+	}
+
 	addCandidate = async () => {
 		const name = this.state.candidateName;
 		if (name === '') return;
-		await this.state.ElectionInstance.methods.addCandidate(name).send({ from: this.state.account, gas: 1000000 });
+		await this.state.ElectionInstance.methods.addCandidate(name).send({ from: this.state.account });
 		window.location.reload(false);
 	}
 
@@ -70,6 +78,28 @@ class AdminPage extends Component {
         }
 
 		return (<>
+			{this.state.start && this.state.end ? <></> : <div className="columns mt-6">
+				<div className="column is-3"></div>
+				<div className="column is-6">
+					<article className="panel is-info is-half">
+						<div className="panel-heading level-left">
+							<FontAwesomeIcon icon={!this.state.start ? faPlay : faPause} className="fa-2x"/>
+							<p className="is-size-3 ml-5">Control the election</p>
+						</div>
+						<div className="p-3">
+							<div className="columns">
+								<div className="column is-4"></div>
+								<div className="column is-4">
+									<button className="button is-primary is-fullwidth" onClick={() => this.operateElection()}>{!this.state.start ? 'Start' : 'Pause'}</button>
+								</div>
+								<div className="column is-4"></div>
+							</div>
+						</div>
+					</article>
+				</div>
+				<div className="column is-3"></div>
+			</div>}
+
 			<div className="columns mt-6">
 				<div className="column is-3"></div>
 				<div className="column is-6">

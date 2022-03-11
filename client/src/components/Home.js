@@ -68,12 +68,11 @@ class Home extends Component {
 		if (this.state.loading) return <Loading />
 
 		return (<>
-            <h1 className="title pt-5 has-text-centered">Election Results</h1>
-            <div className="is-divider" style={{ height: '1000%' }}></div>
-            <hr className="is-divider"></hr>
+            <h1 className="is-size-2 pt-5 has-text-centered">Election Results</h1>
             <div className="columns">
                 <div className="column is-3"></div>
                 <div className="column is-6">
+                    <hr className="is-divider"></hr>
                     <table className="table is-fullwidth">
                         <thead><tr>
                             <th>#</th>
@@ -90,9 +89,11 @@ class Home extends Component {
                             })}
                         </tbody>
                     </table>
+                    <hr className="is-divider pb-0"></hr>
                 </div>
                 <div className="column is-3"></div>
             </div>
+            <h1 className="is-size-6 has-text-centered">Your account ID is: {this.state.account}</h1>
         </>);
 	}
 }
